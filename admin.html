@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Shopify VA Submissions</title>
+<style>
+  :root{
+    --ink:#12231b;
+    --paper:#f6f4ee;
+    --card:#ffffff;
+    --line:#dcd7c8;
+    --green:#2f6b3a;
+    --green-deep:#1e4a27;
+    --mint:#95bf47;
+    --red:#a3341f;
+    --muted:#6b7a70;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif;
+  }
+  header{
+    background:linear-gradient(135deg,var(--green-deep),var(--green));
+    color:#fff;
+    padding:20px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  header h1{margin:0;font-size:1.25rem;}
+  header .who{font-size:.85rem;color:#dfeedd;}
+  button{
+    font-family:inherit;
+    cursor:pointer;
+    border:none;
+    border-radius:8px;
+  }
+  #signOutBtn{
+    background:rgba(255,255,255,.15);
+    color:#fff;
+    padding:8px 14px;
+    font-size:.85rem;
+  }
+  #signOutBtn:hover{background:rgba(255,255,255,.28);}
+
+  /* ---- Login screen ---- */
+  #loginScreen{
+    max-width:420px;
+    margin:100px auto;
+    text-align:center;
+    padding:40px 30px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+  }
+  #loginScreen h2{margin-top:0;color:var(--green-deep);}
+  #loginScreen p{color:var(--muted);font-size:.9rem;}
+  #googleBtn{
+    background:var(--ink);
+    color:#fff;
+    padding:12px 20px;
+    font-size:.95rem;
+    font-weight:600;
+    width:100%;
+    margin-top:10px;
+  }
+  #googleBtn:hover{background:var(--green-deep);}
+  #loginError{
+    color:var(--red);
+    font-size:.85rem;
+    margin-top:14px;
+    display:none;
+  }
+
+  /* ---- Dashboard ---- */
+  #dashboard{display:none;}
+  .wrap{max-width:1100px;margin:0 auto;padding:22px 20px 80px;}
+
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:14px;
+    margin-bottom:20px;
+  }
+  .stat{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px;
+  }
+  .stat .num{font-size:1.6rem;font-weight:700;color:var(--green-deep);}
+  .stat .lbl{font-size:.8rem;color:var(--muted);}
+
+  .toolbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:16px;
+  }
+  .toolbar input[type=text]{
+    flex:1;
+    min-width:200px;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    font-size:.9rem;
+    background:#fff;
+  }
+  .toolbar select{
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+    font-size:.9rem;
+  }
+  .toolbar button{
+    padding:10px 16px;
+    background:var(--green);
+    color:#fff;
+    font-size:.85rem;
+    font-weight:600;
+  }
+  .toolbar button:hover{background:var(--green-deep);}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  thead th{
+    text-align:left;
+    font-size:.75rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--muted);
+    background:#f0eee4;
+    padding:12px 14px;
+  }
+  tbody td{
+    padding:12px 14px;
+    border-top:1px solid var(--line);
+    font-size:.88rem;
+    vertical-align:middle;
+  }
+  tbody tr:hover{background:#fafaf5;cursor:pointer;}
+  .badge{
+    display:inline-block;
+    padding:3px 10px;
+    border-radius:20px;
+    font-size:.75rem;
+    font-weight:600;
+  }
+  .badge.high{background:#e6f2df;color:var(--green-deep);}
+  .badge.mid{background:#fbeed9;color:var(--amber,#9a6a1d);}
+  .badge.low{background:#fbe3de;color:var(--red);}
+
+  .empty{
+    text-align:center;
+    padding:60px 20px;
+    color:var(--muted);
+  }
+
+  /* ---- Detail modal ---- */
+  #overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(18,35,27,.45);
+    z-index:50;
+    align-items:flex-start;
+    justify-content:center;
+    padding:40px 16px;
+    overflow-y:auto;
+  }
+  #detailCard{
+    background:#fff;
+    border-radius:14px;
+    max-width:640px;
+    width:100%;
+    padding:28px;
+    position:relative;
+  }
+  #detailCard h2{margin-top:0;color:var(--green-deep);}
+  #closeDetail{
+    position:absolute;
+    top:18px;right:18px;
+    background:none;
+    font-size:1.3rem;
+    color:var(--muted);
+    padding:4px 10px;
+  }
+  .detail-section{margin-bottom:18px;}
+  .detail-section h3{
+    font-size:.8rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+  .detail-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:4px 16px;
+    font-size:.85rem;
+  }
+  .check-line{
+    display:flex;
+    justify-content:space-between;
+    padding:4px 0;
+    font-size:.85rem;
+    border-bottom:1px dashed var(--line);
+  }
+  .check-line.no{color:var(--red);}
+  .check-line.yes{color:var(--green-deep);}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <h2>Admin Sign In</h2>
+  <p>Sign in with your Google account to view student submissions.</p>
+  <button id="googleBtn">Sign in with Google</button>
+  <div id="loginError">You're signed in, but this account doesn't have admin access.</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <header>
+    <h1>📋 Shopify VA — Submissions</h1>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="who" id="whoLabel"></span>
+      <button id="signOutBtn">Sign out</button>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><div class="num" id="statTotal">0</div><div class="lbl">Total submissions</div></div>
+      <div class="stat"><div class="num" id="statReady">0</div><div class="lbl">Ready for assessment</div></div>
+      <div class="stat"><div class="num" id="statAvg">0%</div><div class="lbl">Avg. completion</div></div>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" id="searchBox" placeholder="Search by name or email…">
+      <select id="confFilter">
+        <option value="">All confidence levels</option>
+        <option value="Beginner">Beginner</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Advanced">Advanced</option>
+      </select>
+      <button id="exportBtn">Export CSV</button>
+    </div>
+
+    <table id="subTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Date</th>
+          <th>Completion</th>
+          <th>Confidence</th>
+          <th>Ready?</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div class="empty" id="emptyState" style="display:none;">No submissions yet.</div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div id="overlay">
+  <div id="detailCard">
+    <button id="closeDetail">✕</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<script type="module">
+  // ------------------------------------------------------------------
+  // 1. FIREBASE CONFIG — same project/config as student-checklist.html
+  // ------------------------------------------------------------------
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import {
+    getFirestore, collection, getDocs, doc, getDoc, query, orderBy
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+
+  // ------------------------------------------------------------------
+  // 2. ELEMENTS
+  // ------------------------------------------------------------------
+  const loginScreen = document.getElementById('loginScreen');
+  const dashboard = document.getElementById('dashboard');
+  const loginError = document.getElementById('loginError');
+  const whoLabel = document.getElementById('whoLabel');
+
+  document.getElementById('googleBtn').addEventListener('click', () => {
+    loginError.style.display = 'none';
+    signInWithPopup(auth, provider).catch(err => {
+      console.error(err);
+      loginError.textContent = 'Sign-in failed. Please try again.';
+      loginError.style.display = 'block';
+    });
+  });
+
+  document.getElementById('signOutBtn').addEventListener('click', () => signOut(auth));
+
+  // ------------------------------------------------------------------
+  // 3. AUTH STATE + ADMIN CHECK
+  //    Admin access is granted only if a document exists at
+  //    /admins/{user's email} in Firestore. Add admins from the
+  //    Firebase Console → Firestore → "admins" collection.
+  //    (This is enforced by security rules too — see setup guide.)
+  // ------------------------------------------------------------------
+  let allSubmissions = [];
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      loginScreen.style.display = 'block';
+      dashboard.style.display = 'none';
+      return;
+    }
+    try {
+      const adminDoc = await getDoc(doc(db, 'admins', user.email));
+      if (!adminDoc.exists()) {
+        loginScreen.style.display = 'block';
+        dashboard.style.display = 'none';
+        loginError.textContent = `Signed in as ${user.email}, but this account doesn't have admin access.`;
+        loginError.style.display = 'block';
+        return;
+      }
+      whoLabel.textContent = user.email;
+      loginScreen.style.display = 'none';
+      dashboard.style.display = 'block';
+      loadSubmissions();
+    } catch (err) {
+      console.error(err);
+      loginError.textContent = 'Could not verify admin access. Please try again.';
+      loginError.style.display = 'block';
+    }
+  });
+
+  // ------------------------------------------------------------------
+  // 4. LOAD + RENDER SUBMISSIONS
+  // ------------------------------------------------------------------
+  async function loadSubmissions() {
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '<tr><td colspan="6">Loading…</td></tr>';
+    try {
+      const q = query(collection(db, 'submissions'), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      allSubmissions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderTable();
+      renderStats();
+    } catch (err) {
+      console.error(err);
+      tbody.innerHTML = '<tr><td colspan="6">Could not load submissions.</td></tr>';
+    }
+  }
+
+  function confidenceBadgeClass(conf) {
+    if (!conf) return 'mid';
+    if (conf.startsWith('Advanced')) return 'high';
+    if (conf.startsWith('Intermediate')) return 'mid';
+    return 'low';
+  }
+
+  function isReady(sub) {
+    const decl = sub.declarations || {};
+    const vals = Object.values(decl);
+    return vals.length > 0 && vals.every(v => v === true);
+  }
+
+  function renderStats() {
+    const total = allSubmissions.length;
+    const ready = allSubmissions.filter(isReady).length;
+    const avg = total
+      ? Math.round(allSubmissions.reduce((sum, s) => sum + (s.completionPercent || 0), 0) / total)
+      : 0;
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statReady').textContent = ready;
+    document.getElementById('statAvg').textContent = avg + '%';
+  }
+
+  function renderTable() {
+    const search = document.getElementById('searchBox').value.trim().toLowerCase();
+    const confFilter = document.getElementById('confFilter').value;
+    const tbody = document.getElementById('tableBody');
+    const emptyState = document.getElementById('emptyState');
+
+    let rows = allSubmissions.filter(s => {
+      const matchesSearch = !search ||
+        (s.fullName || '').toLowerCase().includes(search) ||
+        (s.email || '').toLowerCase().includes(search);
+      const matchesConf = !confFilter || (s.confidence || '').startsWith(confFilter);
+      return matchesSearch && matchesConf;
+    });
+
+    if (rows.length === 0) {
+      tbody.innerHTML = '';
+      emptyState.style.display = 'block';
+      document.getElementById('subTable').style.display = 'none';
+      return;
+    }
+    emptyState.style.display = 'none';
+    document.getElementById('subTable').style.display = 'table';
+
+    tbody.innerHTML = rows.map((s, i) => `
+      <tr data-idx="${allSubmissions.indexOf(s)}">
+        <td>${escapeHtml(s.fullName || '—')}</td>
+        <td>${escapeHtml(s.email || '—')}</td>
+        <td>${escapeHtml(s.submissionDate || '—')}</td>
+        <td>${s.completionPercent ?? 0}%</td>
+        <td><span class="badge ${confidenceBadgeClass(s.confidence)}">${escapeHtml((s.confidence||'—').split(' (')[0])}</span></td>
+        <td>${isReady(s) ? '✅' : '—'}</td>
+      </tr>
+    `).join('');
+
+    tbody.querySelectorAll('tr').forEach(tr => {
+      tr.addEventListener('click', () => openDetail(allSubmissions[+tr.dataset.idx]));
+    });
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, m => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[m]));
+  }
+
+  document.getElementById('searchBox').addEventListener('input', renderTable);
+  document.getElementById('confFilter').addEventListener('change', renderTable);
+
+  // ------------------------------------------------------------------
+  // 5. DETAIL MODAL
+  // ------------------------------------------------------------------
+  const overlay = document.getElementById('overlay');
+  document.getElementById('closeDetail').addEventListener('click', () => overlay.style.display = 'none');
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.style.display = 'none'; });
+
+  function openDetail(sub) {
+    const content = document.getElementById('detailContent');
+    const modulesHtml = Object.entries(sub.modules || {}).map(([k, v]) =>
+      `<div class="check-line ${v ? 'yes' : 'no'}"><span>${escapeHtml(k)}</span><span>${v ? '✔' : '✘'}</span></div>`
+    ).join('');
+    const skillsHtml = Object.entries(sub.skills || {}).map(([k, v]) =>
+      `<div class="check-line ${v ? 'yes' : 'no'}"><span>${escapeHtml(k)}</span><span>${v ? '✔' : '✘'}</span></div>`
+    ).join('');
+    const declHtml = Object.entries(sub.declarations || {}).map(([k, v]) =>
+      `<div class="check-line ${v ? 'yes' : 'no'}"><span>${escapeHtml(k)}</span><span>${v ? '✔' : '✘'}</span></div>`
+    ).join('');
+
+    content.innerHTML = `
+      <h2>${escapeHtml(sub.fullName || '—')}</h2>
+      <div class="detail-grid" style="margin-bottom:18px;">
+        <div><strong>Email:</strong> ${escapeHtml(sub.email || '—')}</div>
+        <div><strong>Date:</strong> ${escapeHtml(sub.submissionDate || '—')}</div>
+        <div><strong>Confidence:</strong> ${escapeHtml(sub.confidence || '—')}</div>
+        <div><strong>Completion:</strong> ${sub.completionPercent ?? 0}%</div>
+      </div>
+      <div class="detail-section">
+        <h3>Questions / Topics Needing Help</h3>
+        <p>${sub.questions ? escapeHtml(sub.questions) : '<em>None provided.</em>'}</p>
+      </div>
+      <div class="detail-section">
+        <h3>Final Declaration</h3>
+        ${declHtml || '<em>None.</em>'}
+      </div>
+      <div class="detail-section">
+        <h3>Practical Skills</h3>
+        ${skillsHtml || '<em>None.</em>'}
+      </div>
+      <div class="detail-section">
+        <h3>Module Checklist</h3>
+        ${modulesHtml || '<em>None.</em>'}
+      </div>
+    `;
+    overlay.style.display = 'flex';
+  }
+
+  // ------------------------------------------------------------------
+  // 6. CSV EXPORT
+  // ------------------------------------------------------------------
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    if (!allSubmissions.length) return;
+    const header = ['Full Name','Email','Submission Date','Completion %','Confidence','Ready for Assessment','Questions'];
+    const rows = allSubmissions.map(s => [
+      s.fullName || '', s.email || '', s.submissionDate || '',
+      s.completionPercent ?? 0, s.confidence || '', isReady(s) ? 'Yes' : 'No',
+      (s.questions || '').replace(/\n/g, ' ')
+    ]);
+    const csv = [header, ...rows]
+      .map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(','))
+      .join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'shopify-va-submissions.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+</script>
+</body>
+</html>

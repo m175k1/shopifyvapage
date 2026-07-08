@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopify VA Training — Checklist</title>
+<style>
+  :root{
+    --ink:#12231b;
+    --paper:#f6f4ee;
+    --card:#ffffff;
+    --line:#dcd7c8;
+    --green:#2f6b3a;
+    --green-deep:#1e4a27;
+    --mint:#95bf47;
+    --amber:#c9862b;
+    --muted:#6b7a70;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif;
+    line-height:1.5;
+    padding-bottom:80px;
+  }
+  header{
+    background:linear-gradient(135deg,var(--green-deep),var(--green));
+    color:#fff;
+    padding:36px 20px 44px;
+    text-align:center;
+  }
+  header h1{
+    margin:0 0 6px;
+    font-size:1.6rem;
+    letter-spacing:.3px;
+  }
+  header p{
+    margin:0;
+    color:#dfeedd;
+    font-size:.95rem;
+  }
+  .wrap{
+    max-width:760px;
+    margin:-28px auto 0;
+    padding:0 16px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 22px 26px;
+    margin-bottom:18px;
+    box-shadow:0 2px 6px rgba(18,35,27,.05);
+  }
+  .card h2{
+    margin:0 0 4px;
+    font-size:1.05rem;
+    color:var(--green-deep);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .card .sub{
+    color:var(--muted);
+    font-size:.85rem;
+    margin-bottom:14px;
+  }
+  label.field{
+    display:block;
+    margin-bottom:14px;
+  }
+  label.field span{
+    display:block;
+    font-size:.85rem;
+    font-weight:600;
+    margin-bottom:5px;
+    color:var(--ink);
+  }
+  input[type=text], input[type=email], input[type=date], textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    font-size:.95rem;
+    background:#fbfaf6;
+    color:var(--ink);
+    font-family:inherit;
+  }
+  input:focus, textarea:focus{
+    outline:2px solid var(--mint);
+    outline-offset:1px;
+    background:#fff;
+  }
+  textarea{min-height:90px;resize:vertical;}
+
+  .item{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:8px 4px;
+    border-bottom:1px dashed var(--line);
+    font-size:.93rem;
+  }
+  .item:last-child{border-bottom:none;}
+  .item input[type=checkbox]{
+    width:19px;height:19px;
+    accent-color:var(--green);
+    margin-top:1px;
+    flex-shrink:0;
+  }
+  .item label{cursor:pointer;}
+
+  .module-progress{
+    float:right;
+    font-size:.75rem;
+    color:var(--muted);
+    font-weight:600;
+    background:var(--paper);
+    padding:2px 9px;
+    border-radius:20px;
+  }
+
+  .radio-row{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .radio-opt{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fbfaf6;
+    cursor:pointer;
+    font-size:.93rem;
+  }
+  .radio-opt input{accent-color:var(--green);width:17px;height:17px;}
+  .radio-opt.checked{border-color:var(--mint);background:#f2f8ea;}
+
+  button#submitBtn{
+    width:100%;
+    padding:15px;
+    background:var(--green);
+    color:#fff;
+    border:none;
+    border-radius:9px;
+    font-size:1rem;
+    font-weight:700;
+    cursor:pointer;
+    letter-spacing:.2px;
+  }
+  button#submitBtn:disabled{background:#9db79a;cursor:not-allowed;}
+  button#submitBtn:hover:not(:disabled){background:var(--green-deep);}
+
+  #status{
+    text-align:center;
+    margin-top:12px;
+    font-size:.9rem;
+    min-height:20px;
+  }
+  #status.error{color:#a3341f;}
+  #status.ok{color:var(--green-deep);font-weight:600;}
+
+  .overall-bar{
+    max-width:760px;
+    margin:14px auto 0;
+    padding:0 16px;
+  }
+  .bar-track{
+    background:#e3e0d2;
+    border-radius:20px;
+    height:10px;
+    overflow:hidden;
+  }
+  .bar-fill{
+    height:100%;
+    background:linear-gradient(90deg,var(--mint),var(--green));
+    width:0%;
+    transition:width .25s ease;
+  }
+  .bar-label{
+    font-size:.78rem;
+    color:var(--muted);
+    margin-top:5px;
+    text-align:right;
+  }
+
+  .success-screen{
+    display:none;
+    max-width:760px;
+    margin:60px auto;
+    text-align:center;
+    padding:0 20px;
+  }
+  .success-screen .check{
+    font-size:3rem;
+  }
+  .success-screen h2{
+    color:var(--green-deep);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Shopify Virtual Assistant Training</h1>
+  <p>Final checklist &amp; self-assessment — complete honestly, this becomes part of your record.</p>
+</header>
+
+<div class="overall-bar">
+  <div class="bar-track"><div class="bar-fill" id="overallFill"></div></div>
+  <div class="bar-label" id="overallLabel">0% complete</div>
+</div>
+
+<div class="wrap" id="formWrap">
+
+  <div class="card">
+    <h2>Student Information</h2>
+    <div class="sub">Let's start with the basics.</div>
+    <label class="field">
+      <span>Full Name</span>
+      <input type="text" id="fullName" required>
+    </label>
+    <label class="field">
+      <span>Email Address</span>
+      <input type="email" id="email" required>
+    </label>
+    <label class="field">
+      <span>Submission Date</span>
+      <input type="date" id="submissionDate" required>
+    </label>
+  </div>
+
+  <div id="modulesContainer"></div>
+
+  <div class="card">
+    <h2>🎯 Practical Skills Checklist</h2>
+    <div class="sub">Check the tasks you can complete without assistance.</div>
+    <div id="skillsContainer"></div>
+  </div>
+
+  <div class="card">
+    <h2>⭐ Confidence Rating</h2>
+    <div class="sub">How confident are you in managing a Shopify store?</div>
+    <div class="radio-row" id="confidenceContainer"></div>
+  </div>
+
+  <div class="card">
+    <h2>📝 Questions or Topics You Need Help With</h2>
+    <textarea id="questions" placeholder="Type anything you'd like your instructor to know..."></textarea>
+  </div>
+
+  <div class="card">
+    <h2>✅ Final Declaration</h2>
+    <div id="declarationContainer"></div>
+  </div>
+
+  <button id="submitBtn">Submit Checklist</button>
+  <div id="status"></div>
+</div>
+
+<div class="success-screen" id="successScreen">
+  <div class="check">✅</div>
+  <h2>Submitted — nice work!</h2>
+  <p>Your checklist has been sent to your instructor. You can close this page.</p>
+</div>
+
+<script type="module">
+  // ------------------------------------------------------------------
+  // 1. FIREBASE CONFIG — replace with your own project's config values
+  //    (Firebase Console → Project Settings → Your apps → SDK setup)
+  // ------------------------------------------------------------------
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ------------------------------------------------------------------
+  // 2. CONTENT — modules, skills, confidence levels, declaration
+  // ------------------------------------------------------------------
+  const modules = [
+    { title: "Module 1 – Shopify Basics", items: [
+      "Dashboard Overview","Store Settings","User Roles & Permissions","Shopify Plans","Navigation & Admin"
+    ]},
+    { title: "Module 2 – Theme Customization", items: [
+      "Theme Editor Overview","Homepage Customization","Header Customization","Footer Customization",
+      "Announcement Bar","Featured Collections","Featured Products","Homepage Sections","Images & Banners",
+      "Buttons & Call-to-Action","Colors & Typography","Mobile Optimization","Theme Settings","Duplicate & Backup Theme"
+    ]},
+    { title: "Module 3 – Products", items: [
+      "Add Products","Product Descriptions","Product Images","Product Variants","Inventory Management",
+      "Product Organization","Product Tags"
+    ]},
+    { title: "Module 4 – Collections & Navigation", items: [
+      "Manual Collections","Automated Collections","Main Menu","Footer Menu","Collection Filters","Search & Navigation"
+    ]},
+    { title: "Module 5 – Apps", items: [
+      "Install Apps","Configure Apps","Remove Apps","App Permissions"
+    ]},
+    { title: "Module 6 – Orders", items: [
+      "Order Management","Draft Orders","Fulfillment","Refunds","Returns","Order Timeline"
+    ]},
+    { title: "Module 7 – Customers", items: [
+      "Customer Accounts","Customer Management","Discount Codes","Gift Cards"
+    ]},
+    { title: "Module 8 – Store Settings", items: [
+      "Shipping Settings","Payment Providers","Taxes","Domains","Notifications","Store Policies"
+    ]},
+    { title: "Module 9 – SEO", items: [
+      "Meta Titles","Meta Descriptions","Image Optimization","URL Handles","Basic SEO Best Practices"
+    ]},
+    { title: "Module 10 – Shopify VA Tasks", items: [
+      "Homepage Updates","Product Uploads","Collection Updates","Banner Updates","Price Updates",
+      "Inventory Updates","Blog Posts","Content Updates","App Management","Basic Troubleshooting",
+      "Daily Store Maintenance"
+    ]}
+  ];
+
+  const skills = [
+    "Customize a Shopify homepage","Add a new product","Create a collection","Update navigation menus",
+    "Install and configure an app","Create a discount code","Update banners","Process an order",
+    "Issue a refund","Update store settings","Publish a blog post","Optimize a product page for SEO"
+  ];
+
+  const confidenceLevels = [
+    "Beginner (Need Guidance)",
+    "Intermediate (Can work with minimal supervision)",
+    "Advanced (Can manage a store independently)"
+  ];
+
+  const declarations = [
+    "I have completed all the lessons above.",
+    "I understand the topics covered.",
+    "I am ready for a practical assessment.",
+    "I am ready to work as a Shopify Virtual Assistant."
+  ];
+
+  // ------------------------------------------------------------------
+  // 3. RENDER
+  // ------------------------------------------------------------------
+  const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');
+
+  const modulesContainer = document.getElementById('modulesContainer');
+  modules.forEach((mod, mi) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    const doneCount = () => card.querySelectorAll('.mod-item:checked').length;
+    card.innerHTML = `
+      <h2>✅ ${mod.title} <span class="module-progress" data-mp>0/${mod.items.length}</span></h2>
+      ${mod.items.map(item => {
+        const id = `m${mi}_${slug(item)}`;
+        return `<div class="item">
+          <input type="checkbox" class="mod-item" id="${id}" data-module="${mod.title}" data-label="${item}">
+          <label for="${id}">${item}</label>
+        </div>`;
+      }).join('')}
+    `;
+    modulesContainer.appendChild(card);
+    card.querySelectorAll('.mod-item').forEach(cb => {
+      cb.addEventListener('change', () => {
+        card.querySelector('[data-mp]').textContent = `${doneCount()}/${mod.items.length}`;
+        updateProgress();
+      });
+    });
+  });
+
+  const skillsContainer = document.getElementById('skillsContainer');
+  skills.forEach((s, i) => {
+    const id = `skill_${slug(s)}`;
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML = `<input type="checkbox" class="skill-item" id="${id}" data-label="${s}">
+      <label for="${id}">${s}</label>`;
+    skillsContainer.appendChild(div);
+    div.querySelector('input').addEventListener('change', updateProgress);
+  });
+
+  const confidenceContainer = document.getElementById('confidenceContainer');
+  confidenceLevels.forEach((c, i) => {
+    const id = `conf_${i}`;
+    const div = document.createElement('label');
+    div.className = 'radio-opt';
+    div.setAttribute('for', id);
+    div.innerHTML = `<input type="radio" name="confidence" id="${id}" value="${c}"><span>${c}</span>`;
+    confidenceContainer.appendChild(div);
+    div.querySelector('input').addEventListener('change', () => {
+      confidenceContainer.querySelectorAll('.radio-opt').forEach(o => o.classList.remove('checked'));
+      div.classList.add('checked');
+      updateProgress();
+    });
+  });
+
+  const declarationContainer = document.getElementById('declarationContainer');
+  declarations.forEach((d, i) => {
+    const id = `decl_${i}`;
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML = `<input type="checkbox" class="decl-item" id="${id}" data-label="${d}">
+      <label for="${id}">${d}</label>`;
+    declarationContainer.appendChild(div);
+    div.querySelector('input').addEventListener('change', updateProgress);
+  });
+
+  // default submission date = today
+  document.getElementById('submissionDate').valueAsDate = new Date();
+
+  // ------------------------------------------------------------------
+  // 4. PROGRESS BAR
+  // ------------------------------------------------------------------
+  function updateProgress() {
+    const totalBoxes = document.querySelectorAll('.mod-item, .skill-item, .decl-item').length + 1; // +1 for confidence
+    const checkedBoxes = document.querySelectorAll('.mod-item:checked, .skill-item:checked, .decl-item:checked').length
+      + (document.querySelector('input[name=confidence]:checked') ? 1 : 0);
+    const pct = Math.round((checkedBoxes / totalBoxes) * 100);
+    document.getElementById('overallFill').style.width = pct + '%';
+    document.getElementById('overallLabel').textContent = pct + '% complete';
+  }
+  updateProgress();
+
+  // ------------------------------------------------------------------
+  // 5. SUBMIT
+  // ------------------------------------------------------------------
+  const statusEl = document.getElementById('status');
+  document.getElementById('submitBtn').addEventListener('click', async () => {
+    const fullName = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const submissionDate = document.getElementById('submissionDate').value;
+
+    if (!fullName || !email || !submissionDate) {
+      statusEl.textContent = 'Please fill in your name, email, and date.';
+      statusEl.className = 'error';
+      return;
+    }
+    const confidence = document.querySelector('input[name=confidence]:checked');
+    if (!confidence) {
+      statusEl.textContent = 'Please select a confidence rating.';
+      statusEl.className = 'error';
+      return;
+    }
+
+    const moduleResults = {};
+    document.querySelectorAll('.mod-item').forEach(cb => {
+      moduleResults[`${cb.dataset.module} — ${cb.dataset.label}`] = cb.checked;
+    });
+    const skillResults = {};
+    document.querySelectorAll('.skill-item').forEach(cb => {
+      skillResults[cb.dataset.label] = cb.checked;
+    });
+    const declResults = {};
+    document.querySelectorAll('.decl-item').forEach(cb => {
+      declResults[cb.dataset.label] = cb.checked;
+    });
+
+    const totalItems = document.querySelectorAll('.mod-item, .skill-item').length;
+    const checkedItems = document.querySelectorAll('.mod-item:checked, .skill-item:checked').length;
+
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+    statusEl.textContent = '';
+    statusEl.className = '';
+
+    try {
+      await addDoc(collection(db, 'submissions'), {
+        fullName,
+        email,
+        submissionDate,
+        modules: moduleResults,
+        skills: skillResults,
+        confidence: confidence.value,
+        questions: document.getElementById('questions').value.trim(),
+        declarations: declResults,
+        completionPercent: Math.round((checkedItems / totalItems) * 100),
+        createdAt: serverTimestamp()
+      });
+
+      document.getElementById('formWrap').style.display = 'none';
+      document.querySelector('.overall-bar').style.display = 'none';
+      document.getElementById('successScreen').style.display = 'block';
+    } catch (err) {
+      console.error(err);
+      statusEl.textContent = 'Something went wrong submitting your checklist. Please try again.';
+      statusEl.className = 'error';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Checklist';
+    }
+  });
+</script>
+</body>
+</html>
